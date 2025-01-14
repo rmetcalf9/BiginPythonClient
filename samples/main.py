@@ -28,25 +28,20 @@ def getServerBasedLogin():
 
 def getClientBasedLogin():
     secret_file = "../secrets/self_client_secrets.json"
+    token_file = "../secrets/self_client_secrets_token.json"
     secrets = None
     with open(secret_file) as json_data:
         secrets = json.load(json_data)
-    login_session = BiginPythonClient.SelfBasedBiginLoginSession(
+    login_session = BiginPythonClient.SelfBasedBiginLoginSessionInteractive(
         client_id=secrets["client_id"],
         client_secret=secrets["client_secret"],
-        endpoint=secrets["endpoint"]
+        endpoint=secrets["endpoint"],
+        token_file=token_file,
+        inquirer=inquirer
     )
     return login_session
 
 login_session = getClientBasedLogin()
 
-print("Use scope:", "ZohoBigin.modules.ALL")
-
-auth_code = inquirer.text(message="Enter auth code returned:").execute()
-if auth_code == "":
-    print("Exiting")
-    exit(0)
-
-login_session.register_auth_code(auth_code=auth_code)
 
 print("End of simple test")
