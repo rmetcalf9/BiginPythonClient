@@ -75,7 +75,7 @@ class BiginLoginSession(LoginSession):
 
     def _get_api_url(self, path):
         #return "https://www.zohoapis.com" + "/bigin/v1" + path
-        return self.api_domain + "/bigin/v1" + path
+        return self.api_domain + "/bigin/v2" + path
 
     def _login(self, access_token, refresh_token, scope, api_domain, token_type, expires_in):
         self.loggedin = True

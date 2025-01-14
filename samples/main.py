@@ -11,7 +11,7 @@ print("Start of simple test")
 
 #print("DD", secrets)
 
-def getServerBasedLogin():
+def getServerBasedLogin(bigin_client):
     secret_file = "../secrets/client_secrets.json"
     secrets = None
     with open(secret_file) as json_data:
@@ -26,13 +26,13 @@ def getServerBasedLogin():
     print("Visit this site", login_session.get_auth_url())
     return login_session
 
-def getClientBasedLogin():
+def getClientBasedLogin(bigin_client):
     secret_file = "../secrets/self_client_secrets.json"
     token_file = "../secrets/self_client_secrets_token.json"
     secrets = None
     with open(secret_file) as json_data:
         secrets = json.load(json_data)
-    login_session = BiginPythonClient.SelfBasedBiginLoginSessionInteractive(
+    login_session = bigin_client.getSelfBasedBiginLoginSessionInteractive(
         client_id=secrets["client_id"],
         client_secret=secrets["client_secret"],
         endpoint=secrets["endpoint"],
@@ -41,7 +41,40 @@ def getClientBasedLogin():
     )
     return login_session
 
-login_session = getClientBasedLogin()
+bigin_client = BiginPythonClient.BiginClient()
+login_session = getClientBasedLogin(bigin_client)
+
+pipelines = bigin_client.getLayouts(loginSession=login_session, module=BiginPythonClient.Module.PIPELINES)
+
+deal_sourcers_meet_pipeline = pipelines.getPipeline(name="Deal Sourcers meet")
+
+if deal_sourcers_meet_pipeline is None:
+    print("Pipeline not found")
+    exit(0)
+
+# fields = deal_sourcers_meet_pipeline.getFields()
+# for field in fields.items:
+#     print(field.dict["api_name"])  #Contact_Name
+
+field_api_names = "Contact_Name,Stage"
+
+contacts = deal_sourcers_meet_pipeline.getRecords(fields=field_api_names)
+
+wahted_stage = "Contacted next day"
+
+filtered_contacts = []
+for contact in contacts:
+    if contact["Stage"] == wahted_stage:
+        filtered_contacts.append(contact)
+
+for contact in filtered_contacts:
+    print(contact)
+
+#
+# stages = deal_sourcers_meet_pipeline.getStages()
+#
+# for stage in stages:
+#     print(stage)
 
 
 print("End of simple test")
