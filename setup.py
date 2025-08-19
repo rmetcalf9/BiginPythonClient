@@ -11,7 +11,7 @@ sp_install_requires = [
 ]
 sp_tests_require = [
   'pytest==7.1.2',
-  'python_Testing_Utilities==0.1.10'
+  'python_Testing_Utilities==0.1.11'
 ]
 
 all_require = sp_install_requires + sp_tests_require
